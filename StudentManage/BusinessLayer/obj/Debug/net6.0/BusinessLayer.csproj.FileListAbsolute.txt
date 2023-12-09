@@ -1,0 +1,15 @@
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\bin\Debug\net6.0\BusinessLayer.deps.json
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\bin\Debug\net6.0\BusinessLayer.dll
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\bin\Debug\net6.0\BusinessLayer.pdb
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\bin\Debug\net6.0\DataAccessLayer.dll
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\bin\Debug\net6.0\DataAccessLayer.pdb
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\obj\Debug\net6.0\BusinessLayer.csproj.AssemblyReference.cache
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\obj\Debug\net6.0\BusinessLayer.GeneratedMSBuildEditorConfig.editorconfig
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\obj\Debug\net6.0\BusinessLayer.AssemblyInfoInputs.cache
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\obj\Debug\net6.0\BusinessLayer.AssemblyInfo.cs
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\obj\Debug\net6.0\BusinessLayer.csproj.CoreCompileInputs.cache
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\obj\Debug\net6.0\BusinessLayer.csproj.CopyComplete
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\obj\Debug\net6.0\BusinessLayer.dll
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\obj\Debug\net6.0\refint\BusinessLayer.dll
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\obj\Debug\net6.0\BusinessLayer.pdb
+D:\study\works\ojt work\homework\FinalProject\StudentManage\BusinessLayer\obj\Debug\net6.0\ref\BusinessLayer.dll
