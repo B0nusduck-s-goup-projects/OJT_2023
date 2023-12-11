@@ -28,7 +28,9 @@ namespace API
 
             //register database
             builder.Services.AddDbContext<ApplicationDbContext>(option =>
-            option.UseSqlServer(@"connection string"));
+            option.UseSqlServer(
+                @"Server=ADMIN\SQLEXPRESS;User ID=MasterAdmin1;Password=MasterAdmin1;Database=StudentManage;TrustServerCertificate=True;"
+            ));
 
             //register repository and their respective interface
             builder.Services.AddScoped<IRepository, Repository>();
