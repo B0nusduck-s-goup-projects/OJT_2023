@@ -8,8 +8,8 @@ using BusinessLayer.Service.Interface;
 using BusinessLayer.Service;
 
 using BusinessLayer.Mapper;
-using BusinessLayer.Mapper.Interface;
 using Microsoft.AspNetCore.Routing.Template;
+using AutoMapper;
 
 namespace API
 {
@@ -33,15 +33,23 @@ namespace API
             ));
 
             //register repository and their respective interface
-            builder.Services.AddScoped<IRepository, Repository>();
+            builder.Services.AddScoped<ISubjectStudentRepository, SubjectStudentRepository>();
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
+            builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+            builder.Services.AddScoped<IProfessorContactRepository, ProfessorContactRepository>();
+            builder.Services.AddScoped<IStudentContactRepository, StudentContactRepository>();
 
-            //register service and their respectivev interface
-            builder.Services.AddScoped<IService, Service>();
+            //register service and their respective interface
+            //builder.Services.AddScoped<IService, Service>();
+            builder.Services.AddScoped<IProfessorService, ProfessorService>();
 
-            //register mapper and their respectivev interface
-            builder.Services.AddScoped<IMapper, Mapper>();
+            //auto mapper configuration
 
-            //specify routes for api url
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            //add content negotiation
+            builder.Services.AddControllers().AddXmlSerializerFormatters();
 
             var app = builder.Build();
 
@@ -56,6 +64,7 @@ namespace API
 
             app.UseAuthorization();
 
+            //specify routes for api url
             app.MapControllers();
             /*app.MapControllerRoute(
                 name: "default route",

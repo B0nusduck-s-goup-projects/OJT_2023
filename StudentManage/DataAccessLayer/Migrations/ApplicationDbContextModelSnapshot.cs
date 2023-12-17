@@ -78,7 +78,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnName("last_name");
 
                     b.Property<string>("MiddleName")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)")
                         .HasColumnName("middle_name");
@@ -151,7 +150,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnName("last_name");
 
                     b.Property<string>("MiddleName")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)")
                         .HasColumnName("middle_name");

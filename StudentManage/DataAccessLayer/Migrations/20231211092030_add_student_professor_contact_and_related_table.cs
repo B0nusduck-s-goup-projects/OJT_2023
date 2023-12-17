@@ -15,7 +15,7 @@ namespace DataAccessLayer.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     first_name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    middle_name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    middle_name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     last_name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
@@ -66,7 +66,7 @@ namespace DataAccessLayer.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     first_name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    middle_name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    middle_name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     last_name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     subject_id = table.Column<int>(type: "int", nullable: false)
                 },

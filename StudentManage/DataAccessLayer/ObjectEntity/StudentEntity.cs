@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DataAccessLayer.ObjectEntity
 {
@@ -13,9 +14,10 @@ namespace DataAccessLayer.ObjectEntity
         [MaxLength(30)]
         [Column("first_name")]
         public string FirstName { get; set; } = null!;
+        [AllowNull]
         [MaxLength(30)]
         [Column("middle_name")]
-        public string MiddleName { get; set; } = null!;
+        public string? MiddleName { get; set; }
         [Required]
         [MaxLength(30)]
         [Column("last_name")]
