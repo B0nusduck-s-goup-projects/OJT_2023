@@ -55,7 +55,8 @@ namespace DataAccessLayer.Repository
             
             _context.SContacts.Add(studentContact);
             _context.SaveChanges();
-            return new ActionStatusEntity{ succeed = true };
+            List<int> ids = new List<int>() { studentContact.Id };
+            return new ActionStatusEntity{ succeed = true, objectIds = ids};
         }
 
         //update

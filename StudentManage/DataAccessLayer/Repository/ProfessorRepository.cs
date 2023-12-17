@@ -1,6 +1,7 @@
 ﻿using DataAccessLayer.Data;
 using DataAccessLayer.ObjectEntity;
 using DataAccessLayer.Repository.Interface;
+using System;
 using System.Xml.Linq;
 
 namespace DataAccessLayer.Repository
@@ -74,7 +75,8 @@ namespace DataAccessLayer.Repository
             }
             _context.Professors.Add(professor);
             _context.SaveChanges();
-            return new ActionStatusEntity{ succeed = true };
+            List<int> ids = new List<int>() { professor.Id };
+            return new ActionStatusEntity{ succeed = true, objectIds = ids};
         }
 
         //update

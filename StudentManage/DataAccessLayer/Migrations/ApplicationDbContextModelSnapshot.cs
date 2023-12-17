@@ -196,14 +196,12 @@ namespace DataAccessLayer.Migrations
                         .HasColumnName("subject_id");
 
                     b.Property<int>("StudentGrade1")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("int")
                         .HasColumnName("student_grade_1");
 
                     b.Property<int>("StudentGrade2")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("int")
-                        .HasColumnName("student_grade_1");
+                        .HasColumnName("student_grade_2");
 
                     b.HasKey("StudentId", "SubjectId")
                         .HasName("subject_student_entity_PK");

@@ -41,8 +41,12 @@ namespace API
             builder.Services.AddScoped<IStudentContactRepository, StudentContactRepository>();
 
             //register service and their respective interface
-            //builder.Services.AddScoped<IService, Service>();
+            builder.Services.AddScoped<ISubjectStudentService, SubjectStudentService>();
+            builder.Services.AddScoped<IStudentService, StudentService>();
             builder.Services.AddScoped<IProfessorService, ProfessorService>();
+            builder.Services.AddScoped<ISubjectService, SubjectService>();
+            builder.Services.AddScoped<IProfessorContactService, ProfessorContactService>();
+            builder.Services.AddScoped<IStudentContactService, StudentContactService>();
 
             //auto mapper configuration
 

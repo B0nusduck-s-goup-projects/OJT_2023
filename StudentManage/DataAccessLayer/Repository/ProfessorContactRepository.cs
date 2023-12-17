@@ -55,7 +55,8 @@ namespace DataAccessLayer.Repository
             
             _context.PContacts.Add(contact);
             _context.SaveChanges();
-            return new ActionStatusEntity{ succeed = true };
+            List<int> ids = new List<int>(){contact.Id};
+            return new ActionStatusEntity{ succeed = true, objectIds = ids};
         }
 
         //update

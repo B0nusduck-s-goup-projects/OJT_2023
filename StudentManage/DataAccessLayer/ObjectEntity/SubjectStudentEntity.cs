@@ -12,7 +12,7 @@ namespace DataAccessLayer.ObjectEntity
         public int StudentId { get; set; }
         [Column("student_grade_1")]
         public int StudentGrade1 { get; set; }
-        [Column("student_grade_1")]
+        [Column("student_grade_2")]
         public int StudentGrade2 { get; set; }
 
         public SubjectEntity Subject = null!;
