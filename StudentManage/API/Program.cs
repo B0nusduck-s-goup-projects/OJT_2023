@@ -54,6 +54,8 @@ namespace API
 
             //add content negotiation
             builder.Services.AddControllers().AddXmlSerializerFormatters();
+            //only return available data format
+            builder.Services.AddControllers(option => option.ReturnHttpNotAcceptable = true);
 
             var app = builder.Build();
 
