@@ -69,6 +69,10 @@ namespace BusinessLayer.Service
         public ActionStatusDTO Post(ProfessorDTO professor)
         {
             ProfessorEntity request = _mapper.Map<ProfessorEntity>(professor);
+            if (request.FirstName == "" || request.LastName == "")
+            {
+                return new ActionStatusDTO { error = "student name must contain first and last name" };
+            }
             ActionStatusEntity response = _repository.Post(request);
             ActionStatusDTO result = _mapper.Map<ActionStatusDTO>(response);
             return result;
@@ -78,6 +82,10 @@ namespace BusinessLayer.Service
         public ActionStatusDTO Put(ProfessorDTO professor)
         {
             ProfessorEntity request = _mapper.Map<ProfessorEntity>(professor);
+            if (request.FirstName == "" || request.LastName == "")
+            {
+                return new ActionStatusDTO { error = "student name must contain first and last name" };
+            }
             ActionStatusEntity response = _repository.Put(request);
             ActionStatusDTO result = _mapper.Map<ActionStatusDTO>(response);
             return result;
