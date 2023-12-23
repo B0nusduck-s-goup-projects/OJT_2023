@@ -1,8 +1,12 @@
-﻿namespace BusinessLayer.DTO
+﻿using System.Xml.Serialization;
+
+namespace BusinessLayer.DTO
 {
     public class ActionStatusDTO
     {
+        [XmlElement("succeed")]
         public bool succeed { get; set; }
+        [XmlElement("error")]
         public string? error { get; set; }
         public List<int>? objectIds { get; set; }
         //note: for most object objectIds only contain one key, but for SubjectStudent

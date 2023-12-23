@@ -19,6 +19,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorContactController>/Get/
+        /// <summary>
+        /// Get professor contacts
+        /// </summary>
+        /// <response code="200">Success: Get professor contacts</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -32,6 +36,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorContactController>/GetByUser/5
+        /// <summary>
+        /// Get professor contacts by professor id
+        /// </summary>
+        ///<response code="200">Success: Get professor contacts by professor id</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -53,6 +61,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorContactController>/GetById/5
+        /// <summary>
+        /// Get professor contacts by id
+        /// </summary>
+        /// <response code="200">Success: Get professor contacts by id </response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -74,6 +86,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorContactController>/GetPage/?pageNum=5&pageLength=5
+        /// <summary>
+        /// Get and page professor contacts
+        /// </summary>
+        /// <response code="200">Success: Get and page professor contacts </response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -100,11 +116,15 @@ namespace API.Controllers
         }
 
         // POST api/<ProfessorContactController>/Post
+        /// <summary>
+        /// Create professor contact
+        /// </summary>
+        /// <response code="200">Success: Create professor contact</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post([FromBody]ProfessorContactDTO professorContact)
+        public IActionResult Post([FromBody] ProfessorContactDTO professorContact)
         {
             if (professorContact.Id > 0)
             {
@@ -131,12 +151,16 @@ namespace API.Controllers
             return Ok(_service.Post(professorContact));
         }
 
-        // POST api/<ProfessorContactController>/Put
+        // PUT api/<ProfessorContactController>/Put
+        /// <summary>
+        /// Update professor contact
+        /// </summary>
+        /// <response code="200">Success: Update professor contact</response>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Put([FromBody]ProfessorContactDTO professorContact)
+        public IActionResult Put([FromBody] ProfessorContactDTO professorContact)
         {
             if (professorContact.Id > 0)
             {
@@ -162,7 +186,11 @@ namespace API.Controllers
             return Ok(_service.Put(professorContact));
         }
 
-        // POST api/<ProfessorContactController>/Delete
+        // DELETE api/<ProfessorContactController>/Delete
+        /// <summary>
+        /// Delete professor contact
+        /// </summary>
+        /// <response code="200">Success: Delete professor contact</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

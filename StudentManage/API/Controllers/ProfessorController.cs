@@ -19,6 +19,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorController>/Get/
+        /// <summary>
+        /// Get professors
+        /// </summary>
+        /// <response code="200">Success: Get professors</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -27,11 +31,16 @@ namespace API.Controllers
             if (!_ProfessorService.Get().Any())
             {
                 return NotFound("The professor list is empty!");
-            }
+        }
             return Ok(_ProfessorService.Get());
         }
 
         // GET api/<ProfessorController>/GetByName/?name=name
+        /// <summary>
+        /// Get professors by name
+        /// </summary>
+        /// <response code="200">Success: Get professors by name</response>
+        /// 
         [HttpGet("{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -50,7 +59,12 @@ namespace API.Controllers
 
             return Ok(professors);
         }
+
         // GET api/<ProfessorController>/GetBySubject/5
+        /// <summary>
+        /// Get professors by subject
+        /// </summary>
+        /// <response code="200">Success: Get professors by subject</response>
         [HttpGet("bysubject/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -63,7 +77,7 @@ namespace API.Controllers
             }
 
             ProfessorDTO? professor = _ProfessorService.GetBySubject(id);
-            if (professor == null )
+            if (professor == null)
             {
                 return NotFound("There is no professor teaching subject: " + id);
             }
@@ -71,7 +85,12 @@ namespace API.Controllers
             return Ok(professor);
         }
 
+
         // GET api/<ProfessorController>/GetById/5
+        /// <summary>
+        /// Get professors by id
+        /// </summary>
+        /// <response code="200">Success: Get professors by id</response>
         [HttpGet("ProfessorId/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -93,6 +112,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorController>/GetPage/?pageNum=5&pageLength=5
+        /// <summary>
+        /// Get and page professors
+        /// </summary>
+        /// <response code="200">Success: Get and page professors</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -118,7 +141,12 @@ namespace API.Controllers
             return Ok(professors);
         }
 
+
         // GET api/<ProfessorController>/GetPageByName/?pageNum=5&pageLength=5&name=name
+        /// <summary>
+        /// Get and page professors by name
+        /// </summary>
+        /// <response code="200">Success: Get and page professors by name</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -143,12 +171,17 @@ namespace API.Controllers
             return Ok(professors);
         }
 
+
         // POST api/<ProfessorController>/Post
+        /// <summary>
+        /// Create professor
+        /// </summary>
+        /// <response code="200">Success: Create professor</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post([FromBody]ProfessorDTO professor)
+        public IActionResult Post([FromBody] ProfessorDTO professor)
         {
             if (professor.Id > 0)
             {
@@ -167,12 +200,17 @@ namespace API.Controllers
             return Ok(_ProfessorService.Post(professor));
         }
 
-        // POST api/<ProfessorController>/Put
+
+        // PUT api/<ProfessorController>/Put
+        /// <summary>
+        /// Update professor
+        /// </summary>
+        /// <response code="200">Success: Update professor</response>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Put([FromBody]ProfessorDTO professor)
+        public IActionResult Put([FromBody] ProfessorDTO professor)
         {
             if (string.IsNullOrEmpty(professor.FullName))
             {
@@ -190,8 +228,11 @@ namespace API.Controllers
             return Ok(_ProfessorService.Put(professor));
         }
 
-        // POST api/<ProfessorController>/Delete
-        [HttpDelete("{id}")]
+        // Delete api/<ProfessorController>/Delete
+        /// <summary>
+        /// Delete professor
+        /// </summary>
+        /// <response code="200">Success: Delete professor</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)

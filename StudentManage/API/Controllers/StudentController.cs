@@ -16,6 +16,10 @@ namespace API.Controllers
         }
 
         // GET api/<StudentController>/Get/
+        /// <summary>
+        /// Get all students 
+        /// </summary>
+        /// <response code="200">Success: Get all students</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -28,7 +32,12 @@ namespace API.Controllers
             return Ok(_service.Get());
         }
 
+
         // GET api/<StudentController>/GetByName/?name=name
+        /// <summary>
+        /// Get students by name
+        /// </summary>
+        /// <response code="200">Success: Get students by name</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -48,7 +57,12 @@ namespace API.Controllers
             return Ok(students);
         }
 
+
         // GET api/<StudentController>/GetById/5
+        /// <summary>
+        /// Get student by id
+        /// </summary>
+        /// <response code="200">Success: Get student by id</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -69,7 +83,12 @@ namespace API.Controllers
             return Ok(students);
         }
 
+
         // GET api/<StudentController>/GetPage/?pageNum=5&pageLength=5
+        /// <summary>
+        /// Get and page students
+        /// </summary>
+        /// <response code="200">Success: Get and page students</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -95,7 +114,12 @@ namespace API.Controllers
             return Ok(students);
         }
 
+
         // GET api/<StudentController>/GetPageByName/?pageNum=5&pageLength=5&name=name
+        /// <summary>
+        /// Get and page student by name
+        /// </summary>
+        /// <response code="200">Success: Get and page student by name</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -121,11 +145,15 @@ namespace API.Controllers
         }
 
         // POST api/<StudentController>/Post
+        /// <summary>
+        /// Create a student
+        /// </summary>
+        /// <response code="200">Success: Create a student</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post([FromBody]StudentDTO student)
+        public IActionResult Post([FromBody] StudentDTO student)
         {
             if (student.Id > 0)
             {
@@ -134,12 +162,16 @@ namespace API.Controllers
             return Ok(_service.Post(student));
         }
 
-        // POST api/<StudentController>/Put
+        // PUT api/<StudentController>/Put
+        /// <summary>
+        /// Update a student
+        /// </summary>
+        /// <response code="200">Success: Update a student</response>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Put([FromBody]StudentDTO student)
+        public IActionResult Put([FromBody] StudentDTO student)
         {
             if (string.IsNullOrEmpty(student.FullName))
             {
@@ -148,7 +180,11 @@ namespace API.Controllers
             return Ok(_service.Put(student));
         }
 
-        // POST api/<StudentController>/Delete
+        // DELETE api/<StudentController>/Delete
+        /// <summary>
+        /// Delete a student
+        /// </summary>
+        /// <response code="200">Success: Delete a student</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
