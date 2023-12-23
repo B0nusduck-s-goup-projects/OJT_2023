@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.DTO;
 using BusinessLayer.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 
 namespace API.Controllers
 {
@@ -9,58 +10,163 @@ namespace API.Controllers
     public class StudentContactController : Controller
     {
         private readonly IStudentContactService _service;
-        public StudentContactController(IStudentContactService service)
+        private readonly IStudentService _StudentService;
+        public StudentContactController(IStudentContactService service, IStudentService studentService)
         {
             _service = service;
+            _StudentService = studentService;
+
         }
 
         // GET api/<StudentContactController>/Get/
         [HttpGet]
-        public List<StudentContactDTO> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Get()
         {
-            return _service.Get();
+            if (!_service.Get().Any())
+            {
+                return NotFound("The student list is empty!");
+            }
+            return Ok(_service.Get());
         }
 
         // GET api/<StudentContactController>/GetByUser/?name=name
         [HttpGet]
-        public StudentContactDTO? GetByUser(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetByUser(int id)
         {
-            return _service.GetByUser(id);
+            if(id <= 0)
+            {
+                return BadRequest("Student user ID must be greater than 0.");
+            }
+            StudentContactDTO? students = _service.GetByUser(id);
+            if (students == null)
+            {
+                return NotFound("There is no student with the user ID: " + id);
+            }
+            return Ok(students);
         }
 
         // GET api/<StudentContactController>/GetById/5
         [HttpGet]
-        public StudentContactDTO? GetById(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetById(int id)
         {
-            return _service.Get(id);
+            if (id <= 0)
+            {
+                return BadRequest("Student ID must be greater than 0.");
+            }
+            StudentContactDTO? students = _service.Get(id);
+            if (students == null)
+            {
+                return NotFound("There is no student with id: " + id);
+            }
+            return Ok(_service.Get(id));
         }
 
         // GET api/<StudentContactController>/GetPage/?pageNum=5&pageLength=5
         [HttpGet]
-        public List<StudentContactDTO> GetPage(int pageNum, int pageLength)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetPage(int pageNum, int pageLength)
         {
-            return _service.Get(pageNum, pageLength);
+            if (pageNum < 0)
+            {
+                return BadRequest("Page number must be greater than or equal to 1.");
+            }
+            if (pageLength <= 0)
+            {
+                return BadRequest("Page length must be a positive value.");
+            }
+
+            List<StudentContactDTO> students = _service.Get(pageNum, pageLength);
+            if (students == null || students.Count == 0)
+            {
+                return NotFound("There is no student from the page number: " + pageNum + ", length: " + pageLength);
+            }
+            return Ok(students);
         }
 
         // POST api/<StudentContactController>/Post
         [HttpPost]
-        public void Post([FromBody]StudentContactDTO studentContact)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Post([FromBody]StudentContactDTO studentContact)
         {
-            _service.Post(studentContact);
+            if (studentContact.Id > 0)
+            {
+                return BadRequest("Student Id can not be changed.");
+            }
+            if (studentContact.UserId <= 0)
+            {
+                return BadRequest("Student requires a positive UserId number.");
+            }
+            var userid = _StudentService.GetByStudent(studentContact.UserId);
+            if (userid == null)
+            {
+                return NotFound("Student with ID " + studentContact.UserId + " does not exist.");
+            }
+            if (!string.IsNullOrEmpty(studentContact.Phone) && !Regex.IsMatch(studentContact.Phone, @"^\d+$"))
+            {
+                return BadRequest("Phone number must contain only digits.");
+            }
+            if (!string.IsNullOrEmpty(studentContact.Email) && !studentContact.Email.EndsWith("@gmail.com"))
+            {
+                return BadRequest("Email address must end with @gmail.com.");
+            }
+
+            return Ok(_service.Post(studentContact));
         }
 
         // POST api/<StudentContactController>/Put
         [HttpPut]
-        public void Put([FromBody]StudentContactDTO studentContact)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Put([FromBody]StudentContactDTO studentContact)
         {
-            _service.Put(studentContact);
+            if (studentContact.Id > 0)
+            {
+                return BadRequest("Student Id can not be changed.");
+            }
+            if (studentContact.UserId <= 0)
+            {
+                return BadRequest("Student requires a positive UserId number.");
+            }
+            var userid = _StudentService.GetByStudent(studentContact.UserId);
+            if (userid == null)
+            {
+                return NotFound("Student with ID " + studentContact.UserId + " does not exist.");
+            }
+            if (!string.IsNullOrEmpty(studentContact.Phone) && !Regex.IsMatch(studentContact.Phone, @"^\d+$"))
+            {
+                return BadRequest("Phone number must contain only digits.");
+            }
+            if (!string.IsNullOrEmpty(studentContact.Email) && !studentContact.Email.EndsWith("@gmail.com"))
+            {
+                return BadRequest("Email address must end with @gmail.com.");
+            }
+            return Ok(_service.Put(studentContact));
         }
 
         // POST api/<StudentContactController>/Delete
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Delete(int id)
         {
-            _service.Delete(id);
+            if (id == 0)
+            {
+                return BadRequest("Id can not be empty");
+            }
+            return Ok(_service.Delete(id));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.DTO;
+using BusinessLayer.Service;
 using BusinessLayer.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,58 +17,135 @@ namespace API.Controllers
 
         // GET api/<SubjectController>/Get/
         [HttpGet]
-        public List<SubjectDTO> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Get()
         {
-            return _service.Get();
+            if (!_service.Get().Any())
+            {
+                return NotFound("The subject list is empty!");
+            }
+            return Ok(_service.Get());
         }
 
         // GET api/<SubjectController>/GetByName/?name=name
         [HttpGet]
-        public List<SubjectDTO> GetByName(string name)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetByName(string name)
         {
-            return _service.Get(name);
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest("Subject name cannot be empty.");
+            }
+            List<SubjectDTO> subjects = _service.Get(name);
+            if (subjects == null || subjects.Count == 0)
+            {
+                return NotFound("There is no subject with the name: " + name);
+            }
+
+            return Ok(subjects);
         }
 
         // GET api/<SubjectController>/GetById/5
         [HttpGet]
-        public SubjectDTO? GetById(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetById(int id)
         {
-            return _service.Get(id);
+            if (id <= 0)
+            {
+                return BadRequest("Subject ID must be greater than 0.");
+            }
+            SubjectDTO? subjects = _service.Get(id);
+            if (subjects == null)
+            {
+                return NotFound("There is no subject ID: " + id);
+            }
+
+            return Ok(subjects);
         }
 
         // GET api/<SubjectController>/GetPage/?pageNum=5&pageLength=5
         [HttpGet]
-        public List<SubjectDTO> GetPage(int pageNum, int pageLength)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetPage(int pageNum, int pageLength)
         {
-            return _service.Get(pageNum, pageLength);
+            if (pageNum < 0)
+            {
+                return BadRequest("Page number must be greater than or equal to 1.");
+            }
+            if (pageLength <= 0)
+            {
+                return BadRequest("Page length must be a positive value.");
+            }
+            List<SubjectDTO> subjects = _service.Get(pageNum, pageLength);
+            if (subjects == null || subjects.Count == 0)
+            {
+                return NotFound("There is no subjects from the page number: " + pageNum + ", length: " + pageLength);
+            }
+            return Ok(subjects);
         }
 
         // GET api/<SubjectController>/GetPageByName/?pageNum=5&pageLength=5&name=name
         [HttpGet]
-        public List<SubjectDTO> GetPageByName(int pageNum, int pageLength, string name)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetPageByName(int pageNum, int pageLength, string name)
         {
-            return _service.Get(pageNum, pageLength, name);
+            if (pageNum < 0)
+            {
+                return BadRequest("Page number must be greater than or equal to 1.");
+            }
+            if (pageLength <= 0)
+            {
+                return BadRequest("Page length must be a positive value.");
+            }
+            List<SubjectDTO> subjects = _service.Get(pageNum, pageLength, name);
+            if (subjects == null || subjects.Count == 0)
+            {
+                return NotFound("There is no subjects from the page number: " + pageNum + ", length: " + pageLength + " or with the name: " + name);
+            }
+            return Ok(subjects);
         }
 
         // POST api/<SubjectController>/Post
         [HttpPost]
-        public ActionStatusDTO Post(SubjectDTO subject)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Post(SubjectDTO subject)
         {
-            return _service.Post(subject);
+            if (subject.Id > 0)
+            {
+                return BadRequest("subject Id can not be changed.");
+            }
+            return Ok(_service.Post(subject));
         }
 
         // POST api/<SubjectController>/Put
         [HttpPut]
-        public ActionStatusDTO Put(SubjectDTO subject)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Put(SubjectDTO subject)
         {
-            return _service.Put(subject);
+            return Ok(_service.Put(subject));
         }
 
         // POST api/<SubjectController>/Delete
         [HttpDelete("{id}")]
-        public ActionStatusDTO Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Delete(int id)
         {
-            return _service.Delete(id);
+            return Ok(_service.Delete(id));
         }
     }
 }

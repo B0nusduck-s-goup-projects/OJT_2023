@@ -23,12 +23,18 @@ namespace DataAccessLayer.Repository
         //get by name
         public List<StudentEntity> Get(string name)
         {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            if (string.IsNullOrEmpty(name))
+            {
+                return new List<StudentEntity>();
+            }
             List<StudentEntity> list = _context.Students.Where(p => p.FirstName.Contains(name) ||
                                                                     p.MiddleName.Contains(name) ||
                                                                     p.LastName.Contains(name))
                                                                     .Take(100).ToList();
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            if (list == null || list.Count == 0)
+            {
+                return new List<StudentEntity>();
+            }
             return list;
         }
 

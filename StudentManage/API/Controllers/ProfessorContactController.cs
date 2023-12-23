@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.DTO;
+using BusinessLayer.Service;
 using BusinessLayer.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 
 namespace API.Controllers
 {
@@ -9,58 +11,168 @@ namespace API.Controllers
     public class ProfessorContactController : Controller
     {
         private readonly IProfessorContactService _service;
-        public ProfessorContactController(IProfessorContactService service)
+        private readonly IProfessorService _ProfService;
+        public ProfessorContactController(IProfessorContactService service, IProfessorService profservice)
         {
             _service = service;
+            _ProfService = profservice;
         }
 
         // GET api/<ProfessorContactController>/Get/
         [HttpGet]
-        public List<ProfessorContactDTO> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Get()
         {
-            return _service.Get();
+            if (!_service.Get().Any())
+            {
+                return NotFound("The professor list is empty!");
+            }
+            return Ok(_service.Get());
         }
 
         // GET api/<ProfessorContactController>/GetByUser/5
         [HttpGet]
-        public ProfessorContactDTO? GetByUser(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetByUser(int id)
         {
-            return _service.GetByUser(id);
+            if (id <= 0)
+            {
+                return BadRequest("User ID must be greater than 0.");
+            }
+
+            ProfessorContactDTO? professor = _service.GetByUser(id);
+            if (professor == null)
+            {
+                return NotFound("There is no professor with user ID: " + id);
+            }
+
+            return Ok(_service.GetByUser(id));
         }
 
         // GET api/<ProfessorContactController>/GetById/5
         [HttpGet]
-        public ProfessorContactDTO? GetById(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetById(int id)
         {
-            return _service.Get(id);
+            if (id <= 0)
+            {
+                return BadRequest("User ID must be greater than 0.");
+            }
+
+            ProfessorContactDTO? professor = _service.Get(id);
+            if (professor == null)
+            {
+                return NotFound("There is no professor with id: " + id);
+            }
+
+            return Ok(_service.Get(id));
         }
 
         // GET api/<ProfessorContactController>/GetPage/?pageNum=5&pageLength=5
         [HttpGet]
-        public List<ProfessorContactDTO> GetPage(int pageNum, int pageLength)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetPage(int pageNum, int pageLength)
         {
-            return _service.Get(pageNum, pageLength);
+            if (pageNum < 0)
+            {
+                return BadRequest("Page number must be greater than or equal to 1.");
+            }
+
+            if (pageLength <= 0)
+            {
+                return BadRequest("Page length must be a positive value.");
+            }
+
+            List<ProfessorContactDTO> professors = _service.Get(pageNum, pageLength);
+
+            if (professors == null || professors.Count == 0)
+            {
+                return NotFound("There is no professors from the page number: " + pageNum + ", length: " + pageLength);
+            }
+            return Ok(professors);
         }
 
         // POST api/<ProfessorContactController>/Post
         [HttpPost]
-        public void Post([FromBody]ProfessorContactDTO professorContact)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Post([FromBody]ProfessorContactDTO professorContact)
         {
-            _service.Post(professorContact);
+            if (professorContact.Id > 0)
+            {
+                return BadRequest("Professor Id can not be changed.");
+            }
+            if (professorContact.UserId <= 0)
+            {
+                return BadRequest("Professor requires a positive UserId number.");
+            }
+            var userid = _ProfService.Get(professorContact.UserId);
+            if (userid == null)
+            {
+                return NotFound("Professor with ID " + professorContact.UserId + " does not exist.");
+            }
+            if (!string.IsNullOrEmpty(professorContact.Phone) && !Regex.IsMatch(professorContact.Phone, @"^\d+$"))
+            {
+                return BadRequest("Phone number must contain only digits.");
+            }
+            if (!string.IsNullOrEmpty(professorContact.Email) && !professorContact.Email.EndsWith("@gmail.com"))
+            {
+                return BadRequest("Email address must end with @gmail.com.");
+            }
+
+            return Ok(_service.Post(professorContact));
         }
 
         // POST api/<ProfessorContactController>/Put
         [HttpPut]
-        public void Put([FromBody]ProfessorContactDTO professorContact)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Put([FromBody]ProfessorContactDTO professorContact)
         {
-            _service.Put(professorContact);
+            if (professorContact.Id > 0)
+            {
+                return BadRequest("Professor Id can not be changed.");
+            }
+            if (professorContact.UserId <= 0)
+            {
+                return BadRequest("Professor requires a UserId.");
+            }
+            var userid = _ProfService.Get(professorContact.UserId);
+            if (userid == null)
+            {
+                return NotFound("Professor with ID " + professorContact.UserId + " does not exist.");
+            }
+            if (!string.IsNullOrEmpty(professorContact.Phone) && !Regex.IsMatch(professorContact.Phone, @"^\d+$"))
+            {
+                return BadRequest("Phone number must contain only digits.");
+            }
+            if (!string.IsNullOrEmpty(professorContact.Email) && !professorContact.Email.EndsWith("@gmail.com"))
+            {
+                return BadRequest("Email address must end with @gmail.com.");
+            }
+            return Ok(_service.Put(professorContact));
         }
 
         // POST api/<ProfessorContactController>/Delete
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Delete(int id)
         {
-            _service.Delete(id);
+            if (id == 0)
+            {
+                return BadRequest("Id can not be empty");
+            }
+            return Ok(_service.Delete(id));
         }
     }
 }

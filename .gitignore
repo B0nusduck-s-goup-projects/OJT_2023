@@ -1,11 +1,3 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
-/.vs/StudentManage
-/API/obj
-/BusinessLayer/obj
-/DataAccessLayer/obj
-/StudentManage/API/obj
-/StudentManage/BusinessLayer/obj
-/StudentManage/DataAccessLayer/obj
