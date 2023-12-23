@@ -233,6 +233,7 @@ namespace API.Controllers
         /// Delete professor
         /// </summary>
         /// <response code="200">Success: Delete professor</response>
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)
