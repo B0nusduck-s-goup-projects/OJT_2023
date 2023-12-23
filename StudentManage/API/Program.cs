@@ -1,4 +1,4 @@
-using DataAccessLayer.Data;
+﻿using DataAccessLayer.Data;
 using Microsoft.EntityFrameworkCore;
 
 using DataAccessLayer.Repository.Interface;
@@ -8,8 +8,9 @@ using BusinessLayer.Service.Interface;
 using BusinessLayer.Service;
 
 using BusinessLayer.Mapper;
-using BusinessLayer.Mapper.Interface;
 using Microsoft.AspNetCore.Routing.Template;
+using AutoMapper;
+using System.Reflection;
 
 namespace API
 {
@@ -24,22 +25,51 @@ namespace API
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1",
+               new Microsoft.OpenApi.Models.OpenApiInfo
+               {
+                   Title = "Group 3 Student management API documentation",
+                   Description = "(b ᵔ▽ᵔ)b [Group 3 Student management API documentation] (b ᵔ▽ᵔ)b",
+                   Version = "v1"
+               });
+                var filename = Assembly.GetExecutingAssembly().GetName().Name + ".xml";
+                var filepath = Path.Combine(AppContext.BaseDirectory, filename);
+                options.IncludeXmlComments(filepath);
+            });
+
 
             //register database
             builder.Services.AddDbContext<ApplicationDbContext>(option =>
-            option.UseSqlServer(@"connection string"));
+            option.UseSqlServer(
+                @"Server=ADMIN\SQLEXPRESS;User ID=MasterAdmin1;Password=MasterAdmin1;Database=StudentManage;TrustServerCertificate=True;"
+            ));
 
             //register repository and their respective interface
-            builder.Services.AddScoped<IRepository, Repository>();
+            builder.Services.AddScoped<ISubjectStudentRepository, SubjectStudentRepository>();
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<IProfessorRepository, ProfessorRepository>();
+            builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+            builder.Services.AddScoped<IProfessorContactRepository, ProfessorContactRepository>();
+            builder.Services.AddScoped<IStudentContactRepository, StudentContactRepository>();
 
-            //register service and their respectivev interface
-            builder.Services.AddScoped<IService, Service>();
+            //register service and their respective interface
+            builder.Services.AddScoped<ISubjectStudentService, SubjectStudentService>();
+            builder.Services.AddScoped<IStudentService, StudentService>();
+            builder.Services.AddScoped<IProfessorService, ProfessorService>();
+            builder.Services.AddScoped<ISubjectService, SubjectService>();
+            builder.Services.AddScoped<IProfessorContactService, ProfessorContactService>();
+            builder.Services.AddScoped<IStudentContactService, StudentContactService>();
 
-            //register mapper and their respectivev interface
-            builder.Services.AddScoped<IMapper, Mapper>();
+            //auto mapper configuration
 
-            //specify routes for api url
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            //add content negotiation
+            builder.Services.AddControllers().AddXmlSerializerFormatters();
+            //only return available data format
+            builder.Services.AddControllers(option => option.ReturnHttpNotAcceptable = true);
 
             var app = builder.Build();
 
@@ -47,13 +77,18 @@ namespace API
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(options =>
+                {
+                    options.DocumentTitle = "Group 3 - Student management Api Swagger";
+                });
+                app.UseCors();
             }
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
+            //specify routes for api url
             app.MapControllers();
             /*app.MapControllerRoute(
                 name: "default route",
