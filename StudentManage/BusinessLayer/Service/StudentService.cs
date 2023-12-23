@@ -24,7 +24,7 @@ namespace BusinessLayer.Service
             List<StudentDTO> result = _mapper.Map<List<StudentDTO>>(list);
             return result;
         }
-        
+
         //get by name
         public List<StudentDTO> Get(string name)
         {
@@ -34,7 +34,7 @@ namespace BusinessLayer.Service
         }
 
         //get by id
-        public StudentDTO? Get(int id)
+        public StudentDTO? GetByStudent(int id)
         {
             StudentEntity? list = _repository.Get(id);
             StudentDTO? result = _mapper.Map<StudentDTO?>(list);

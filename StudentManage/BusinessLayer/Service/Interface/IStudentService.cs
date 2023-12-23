@@ -7,7 +7,7 @@ namespace BusinessLayer.Service.Interface
     {
         public List<StudentDTO> Get();
         public List<StudentDTO> Get(string name);
-        public StudentDTO? Get(int id);
+        public StudentDTO? GetByStudent(int id);
         public List<StudentDTO> Get(int pageNum, int pageLength);
         public List<StudentDTO> Get(int pageNum, int pageLength, string name);
         public ActionStatusDTO Post(StudentDTO student);

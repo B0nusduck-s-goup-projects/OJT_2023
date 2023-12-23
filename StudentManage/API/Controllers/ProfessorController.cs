@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.DTO;
 using BusinessLayer.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace API.Controllers
 {
@@ -8,73 +10,197 @@ namespace API.Controllers
     [ApiController]
     public class ProfessorController : Controller
     {
-        private readonly IProfessorService _service;
-        public ProfessorController(IProfessorService service)
+        private readonly IProfessorService _ProfessorService;
+        private readonly ISubjectService _SubjectService;
+        public ProfessorController(IProfessorService service, ISubjectService subjectService)
         {
-            _service = service;
+            _ProfessorService = service;
+            _SubjectService = subjectService;
         }
 
         // GET api/<ProfessorController>/Get/
         [HttpGet]
-        public List<ProfessorDTO> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Get()
         {
-            return _service.Get();
+            if (!_ProfessorService.Get().Any())
+            {
+                return NotFound("The professor list is empty!");
+            }
+            return Ok(_ProfessorService.Get());
         }
 
         // GET api/<ProfessorController>/GetByName/?name=name
-        [HttpGet]
-        public List<ProfessorDTO> GetByName(string name)
+        [HttpGet("{name}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetByName(string name)
         {
-            return _service.Get(name);
-        }
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest("Professor name cannot be empty.");
+            }
+            List<ProfessorDTO> professors = _ProfessorService.Get(name);
+            if (professors == null || professors.Count == 0)
+            {
+                return NotFound("There is no professor with the name: " + name);
+            }
 
+            return Ok(professors);
+        }
         // GET api/<ProfessorController>/GetBySubject/5
-        [HttpGet]
-        public ProfessorDTO? GetBySubject(int id)
+        [HttpGet("bysubject/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetBySubject(int id)
         {
-            return _service.GetBySubject(id);
+            if (id <= 0)
+            {
+                return BadRequest("Subject ID must be greater than 0.");
+            }
+
+            ProfessorDTO? professor = _ProfessorService.GetBySubject(id);
+            if (professor == null )
+            {
+                return NotFound("There is no professor teaching subject: " + id);
+            }
+
+            return Ok(professor);
         }
 
         // GET api/<ProfessorController>/GetById/5
-        [HttpGet]
-        public ProfessorDTO? GetById(int id)
+        [HttpGet("ProfessorId/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetById(int id)
         {
-            return _service.Get(id);
+            if (id <= 0)
+            {
+                return BadRequest("Professor ID must be greater than 0.");
+            }
+
+            ProfessorDTO? professor = _ProfessorService.Get(id);
+            if (professor == null)
+            {
+                return NotFound("There is no professor with the id: " + id);
+            }
+
+            return Ok(professor);
         }
 
         // GET api/<ProfessorController>/GetPage/?pageNum=5&pageLength=5
         [HttpGet]
-        public List<ProfessorDTO> GetPage(int pageNum, int pageLength)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetPage(int pageNum, int pageLength)
         {
-            return _service.Get(pageNum, pageLength);
+            if (pageNum < 0)
+            {
+                return BadRequest("Page number must be greater than or equal to 1.");
+            }
+
+            if (pageLength <= 0)
+            {
+                return BadRequest("Page length must be a positive value.");
+            }
+
+            List<ProfessorDTO> professors = _ProfessorService.Get(pageNum, pageLength);
+
+            if (professors == null || professors.Count == 0)
+            {
+                return NotFound("There is no professors from the page number: " + pageNum + ", length: " + pageLength);
+            }
+            return Ok(professors);
         }
 
         // GET api/<ProfessorController>/GetPageByName/?pageNum=5&pageLength=5&name=name
         [HttpGet]
-        public List<ProfessorDTO> GetPageByName(int pageNum, int pageLength, string name)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetPageByName(int pageNum, int pageLength, string name)
         {
-            return _service.Get(pageNum, pageLength, name);
+            if (pageNum < 0)
+            {
+                return BadRequest("Page number must be greater than or equal to 1.");
+            }
+
+            if (pageLength <= 0)
+            {
+                return BadRequest("Page length must be a positive value.");
+            }
+            List<ProfessorDTO> professors = _ProfessorService.Get(pageNum, pageLength, name);
+
+            if (professors == null || professors.Count == 0)
+            {
+                return NotFound("There is no professors from the page number: " + pageNum + ", length: " + pageLength + " or with the name: " + name);
+            }
+            return Ok(professors);
         }
 
         // POST api/<ProfessorController>/Post
         [HttpPost]
-        public void Post([FromBody]ProfessorDTO professor)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Post([FromBody]ProfessorDTO professor)
         {
-            _service.Post(professor);
+            if (professor.Id > 0)
+            {
+                return BadRequest("Professor Id can not be changed.");
+            }
+            if (professor.SubjectId <= 0)
+            {
+                return BadRequest("Professor requires a positive SubjectId number.");
+            }
+            var subject = _SubjectService.Get(professor.SubjectId);
+            if (subject == null)
+            {
+                return NotFound("Subject with ID " + professor.SubjectId + " does not exist.");
+            }
+
+            return Ok(_ProfessorService.Post(professor));
         }
 
         // POST api/<ProfessorController>/Put
         [HttpPut]
-        public void Put([FromBody]ProfessorDTO professor)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Put([FromBody]ProfessorDTO professor)
         {
-            _service.Put(professor);
+            if (string.IsNullOrEmpty(professor.FullName))
+            {
+                return BadRequest("Professor requires Name");
+            }
+            if (professor.SubjectId == 0)
+            {
+                return BadRequest("Professor requires a SubjectId.");
+            }
+            var subject = _SubjectService.Get(professor.SubjectId);
+            if (subject == null)
+            {
+                return NotFound("Subject with ID " + professor.SubjectId + " does not exist.");
+            }
+            return Ok(_ProfessorService.Put(professor));
         }
 
         // POST api/<ProfessorController>/Delete
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Delete(int id)
         {
-            _service.Delete(id);
+            if (id == 0)
+            {
+                return BadRequest("Id can not be empty");
+            }
+            return Ok(_ProfessorService.Delete(id));
         }
     }
 }

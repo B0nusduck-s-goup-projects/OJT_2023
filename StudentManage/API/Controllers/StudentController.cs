@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.DTO;
+using BusinessLayer.Service;
 using BusinessLayer.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,58 +17,148 @@ namespace API.Controllers
 
         // GET api/<StudentController>/Get/
         [HttpGet]
-        public List<StudentDTO> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Get()
         {
-            return _service.Get();
+            if (!_service.Get().Any())
+            {
+                return NotFound("The student list is empty!");
+            }
+            return Ok(_service.Get());
         }
 
         // GET api/<StudentController>/GetByName/?name=name
         [HttpGet]
-        public List<StudentDTO> GetByName(string name)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetByName(string name)
         {
-            return _service.Get(name);
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest("Student name cannot be empty.");
+            }
+            List<StudentDTO> students = _service.Get(name);
+            if (students == null || students.Count == 0)
+            {
+                return NotFound("There is no student with the name: " + name);
+            }
+
+            return Ok(students);
         }
 
         // GET api/<StudentController>/GetById/5
         [HttpGet]
-        public StudentDTO? GetById(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetById(int id)
         {
-            return _service.Get(id);
+            if (id <= 0)
+            {
+                return BadRequest("Student ID must be greater than 0.");
+            }
+
+            StudentDTO? students = _service.GetByStudent(id);
+            if (students == null)
+            {
+                return NotFound("There is no student with the ID: " + id);
+            }
+
+            return Ok(students);
         }
 
         // GET api/<StudentController>/GetPage/?pageNum=5&pageLength=5
         [HttpGet]
-        public List<StudentDTO> GetPage(int pageNum, int pageLength)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetPage(int pageNum, int pageLength)
         {
-            return _service.Get(pageNum, pageLength);
+            if (pageNum < 0)
+            {
+                return BadRequest("Page number must be greater than or equal to 1.");
+            }
+
+            if (pageLength <= 0)
+            {
+                return BadRequest("Page length must be a positive value.");
+            }
+
+            List<StudentDTO> students = _service.Get(pageNum, pageLength);
+
+            if (students == null || students.Count == 0)
+            {
+                return NotFound("There is no students from the page number: " + pageNum + ", length: " + pageLength);
+            }
+            return Ok(students);
         }
 
         // GET api/<StudentController>/GetPageByName/?pageNum=5&pageLength=5&name=name
         [HttpGet]
-        public List<StudentDTO> GetPageByName(int pageNum, int pageLength, string name)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GetPageByName(int pageNum, int pageLength, string name)
         {
-            return _service.Get(pageNum, pageLength, name);
+            if (pageNum < 0)
+            {
+                return BadRequest("Page number must be greater than or equal to 1.");
+            }
+
+            if (pageLength <= 0)
+            {
+                return BadRequest("Page length must be a positive value.");
+            }
+            List<StudentDTO> students = _service.Get(pageNum, pageLength, name);
+
+            if (students == null || students.Count == 0)
+            {
+                return NotFound("There is no students from the page number: " + pageNum + ", length: " + pageLength + " or with the name: " + name);
+            }
+            return Ok(students);
         }
 
         // POST api/<StudentController>/Post
         [HttpPost]
-        public void Post([FromBody]StudentDTO student)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Post([FromBody]StudentDTO student)
         {
-            _service.Post(student);
+            if (student.Id > 0)
+            {
+                return BadRequest("Student Id can not be changed.");
+            }
+            return Ok(_service.Post(student));
         }
 
         // POST api/<StudentController>/Put
         [HttpPut]
-        public void Put([FromBody]StudentDTO student)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Put([FromBody]StudentDTO student)
         {
-            _service.Put(student);
+            if (string.IsNullOrEmpty(student.FullName))
+            {
+                return BadRequest("Student requires Name");
+            }
+            return Ok(_service.Put(student));
         }
 
         // POST api/<StudentController>/Delete
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Delete(int id)
         {
-            _service.Delete(id);
+            if (id == 0)
+            {
+                return BadRequest("Id can not be empty");
+            }
+            return Ok(_service.Delete(id));
         }
     }
 }
