@@ -19,6 +19,10 @@ namespace API.Controllers
         }
 
         // GET api/<StudentContactController>/Get/
+        /// <summary>
+        /// Get student contacts
+        /// </summary>
+        /// <response code="200">Success: Get student contacts</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -32,13 +36,17 @@ namespace API.Controllers
         }
 
         // GET api/<StudentContactController>/GetByUser/?name=name
+        /// <summary>
+        /// Get student contacts by student id
+        /// </summary>
+        /// <response code="200">Success: Get student contacts by student id</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetByUser(int id)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
                 return BadRequest("Student user ID must be greater than 0.");
             }
@@ -51,6 +59,10 @@ namespace API.Controllers
         }
 
         // GET api/<StudentContactController>/GetById/5
+        /// <summary>
+        /// Get student contacts by id
+        /// </summary>
+        /// <response code="200">Success: Get student contacts by id</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -70,6 +82,10 @@ namespace API.Controllers
         }
 
         // GET api/<StudentContactController>/GetPage/?pageNum=5&pageLength=5
+        /// <summary>
+        /// Get and page student contacts
+        /// </summary>
+        /// <response code="200">Success: Get and page student contacts</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -93,12 +109,17 @@ namespace API.Controllers
             return Ok(students);
         }
 
+
         // POST api/<StudentContactController>/Post
+        /// <summary>
+        /// Create student contact
+        /// </summary>
+        /// <response code="200">Success: Create student contact</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post([FromBody]StudentContactDTO studentContact)
+        public IActionResult Post([FromBody] StudentContactDTO studentContact)
         {
             if (studentContact.Id > 0)
             {
@@ -125,12 +146,17 @@ namespace API.Controllers
             return Ok(_service.Post(studentContact));
         }
 
-        // POST api/<StudentContactController>/Put
+
+        // PUT api/<StudentContactController>/Put
+        /// <summary>
+        /// Update student contact
+        /// </summary>
+        /// <response code="200">Success: Update student contact</response>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Put([FromBody]StudentContactDTO studentContact)
+        public IActionResult Put([FromBody] StudentContactDTO studentContact)
         {
             if (studentContact.Id > 0)
             {
@@ -156,7 +182,11 @@ namespace API.Controllers
             return Ok(_service.Put(studentContact));
         }
 
-        // POST api/<StudentContactController>/Delete
+        // DELETE api/<StudentContactController>/Delete
+        /// <summary>
+        /// Delete student contact
+        /// </summary>
+        /// <response code="200">Success: Delete student contact</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
