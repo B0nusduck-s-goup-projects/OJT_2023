@@ -1,4 +1,4 @@
-using DataAccessLayer.Data;
+﻿using DataAccessLayer.Data;
 using Microsoft.EntityFrameworkCore;
 
 using DataAccessLayer.Repository.Interface;
@@ -10,6 +10,7 @@ using BusinessLayer.Service;
 using BusinessLayer.Mapper;
 using Microsoft.AspNetCore.Routing.Template;
 using AutoMapper;
+using System.Reflection;
 
 namespace API
 {
@@ -24,12 +25,25 @@ namespace API
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1",
+               new Microsoft.OpenApi.Models.OpenApiInfo
+               {
+                   Title = "Group 3 Student management API documentation",
+                   Description = "(b ᵔ▽ᵔ)b [Group 3 Student management API documentation] (b ᵔ▽ᵔ)b",
+                   Version = "v1"
+               });
+                var filename = Assembly.GetExecutingAssembly().GetName().Name + ".xml";
+                var filepath = Path.Combine(AppContext.BaseDirectory, filename);
+                options.IncludeXmlComments(filepath);
+            });
+
 
             //register database
             builder.Services.AddDbContext<ApplicationDbContext>(option =>
             option.UseSqlServer(
-                @"Server=ADMIN\SQLEXPRESS;User ID=MasterAdmin1;Password=MasterAdmin1;Database=StudentManage;TrustServerCertificate=True;"
+                @"Server=Gamerboy1020;Trusted_Connection=True;Database=StudentManage;TrustServerCertificate=True;"
             ));
 
             //register repository and their respective interface
@@ -63,7 +77,11 @@ namespace API
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(options =>
+                {
+                    options.DocumentTitle = "Group 3 - Student management Api Swagger";
+                });
+                app.UseCors();
             }
 
             app.UseHttpsRedirection();

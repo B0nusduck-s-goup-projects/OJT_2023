@@ -15,6 +15,10 @@ namespace API.Controllers
         }
 
         // GET api/<StudentController>/Get/
+        /// <summary>
+        /// Get all students 
+        /// </summary>
+        /// <response code="200">Success: Get all students</response>
         [HttpGet]
         public List<StudentDTO> Get()
         {
@@ -22,6 +26,10 @@ namespace API.Controllers
         }
 
         // GET api/<StudentController>/GetByName/?name=name
+        /// <summary>
+        /// Get students by name
+        /// </summary>
+        /// <response code="200">Success: Get students by name</response>
         [HttpGet]
         public List<StudentDTO> GetByName(string name)
         {
@@ -29,6 +37,10 @@ namespace API.Controllers
         }
 
         // GET api/<StudentController>/GetById/5
+        /// <summary>
+        /// Get student by id
+        /// </summary>
+        /// <response code="200">Success: Get student by id</response>
         [HttpGet]
         public StudentDTO? GetById(int id)
         {
@@ -36,6 +48,10 @@ namespace API.Controllers
         }
 
         // GET api/<StudentController>/GetPage/?pageNum=5&pageLength=5
+        /// <summary>
+        /// Get and page students
+        /// </summary>
+        /// <response code="200">Success: Get and page students</response>
         [HttpGet]
         public List<StudentDTO> GetPage(int pageNum, int pageLength)
         {
@@ -43,6 +59,10 @@ namespace API.Controllers
         }
 
         // GET api/<StudentController>/GetPageByName/?pageNum=5&pageLength=5&name=name
+        /// <summary>
+        /// Get and page student by name
+        /// </summary>
+        /// <response code="200">Success: Get and page student by name</response>
         [HttpGet]
         public List<StudentDTO> GetPageByName(int pageNum, int pageLength, string name)
         {
@@ -50,6 +70,10 @@ namespace API.Controllers
         }
 
         // POST api/<StudentController>/Post
+        /// <summary>
+        /// Create a student
+        /// </summary>
+        /// <response code="200">Success: Create a student</response>
         [HttpPost]
         public void Post([FromBody]StudentDTO student)
         {
@@ -57,6 +81,10 @@ namespace API.Controllers
         }
 
         // POST api/<StudentController>/Put
+        /// <summary>
+        /// Update a student
+        /// </summary>
+        /// <response code="200">Success: Update a student</response>
         [HttpPut]
         public void Put([FromBody]StudentDTO student)
         {
@@ -64,6 +92,10 @@ namespace API.Controllers
         }
 
         // POST api/<StudentController>/Delete
+        /// <summary>
+        /// Delete a student
+        /// </summary>
+        /// <response code="200">Success: Delete a student</response>
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

@@ -15,6 +15,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorController>/Get/
+        /// <summary>
+        /// Get professors
+        /// </summary>
+        /// <response code="200">Success: Get professors</response>
         [HttpGet]
         public List<ProfessorDTO> Get()
         {
@@ -22,6 +26,11 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorController>/GetByName/?name=name
+        /// <summary>
+        /// Get professors by name
+        /// </summary>
+        /// <response code="200">Success: Get professors by name</response>
+        /// 
         [HttpGet]
         public List<ProfessorDTO> GetByName(string name)
         {
@@ -29,6 +38,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorController>/GetBySubject/5
+        /// <summary>
+        /// Get professors by subject
+        /// </summary>
+        /// <response code="200">Success: Get professors by subject</response>
         [HttpGet]
         public ProfessorDTO? GetBySubject(int id)
         {
@@ -36,6 +49,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorController>/GetById/5
+        /// <summary>
+        /// Get professors by id
+        /// </summary>
+        /// <response code="200">Success: Get professors by id</response>
         [HttpGet]
         public ProfessorDTO? GetById(int id)
         {
@@ -43,6 +60,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorController>/GetPage/?pageNum=5&pageLength=5
+        /// <summary>
+        /// Get and page professors
+        /// </summary>
+        /// <response code="200">Success: Get and page professors</response>
         [HttpGet]
         public List<ProfessorDTO> GetPage(int pageNum, int pageLength)
         {
@@ -50,6 +71,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorController>/GetPageByName/?pageNum=5&pageLength=5&name=name
+        /// <summary>
+        /// Get and page professors by name
+        /// </summary>
+        /// <response code="200">Success: Get and page professors by name</response>
         [HttpGet]
         public List<ProfessorDTO> GetPageByName(int pageNum, int pageLength, string name)
         {
@@ -57,6 +82,10 @@ namespace API.Controllers
         }
 
         // POST api/<ProfessorController>/Post
+        /// <summary>
+        /// Create professor
+        /// </summary>
+        /// <response code="200">Success: Create professor</response>
         [HttpPost]
         public void Post([FromBody]ProfessorDTO professor)
         {
@@ -64,6 +93,10 @@ namespace API.Controllers
         }
 
         // POST api/<ProfessorController>/Put
+        /// <summary>
+        /// Update professor
+        /// </summary>
+        /// <response code="200">Success: Update professor</response>
         [HttpPut]
         public void Put([FromBody]ProfessorDTO professor)
         {
@@ -71,6 +104,10 @@ namespace API.Controllers
         }
 
         // POST api/<ProfessorController>/Delete
+        /// <summary>
+        /// Delete professor
+        /// </summary>
+        /// <response code="200">Success: Delete professor</response>
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

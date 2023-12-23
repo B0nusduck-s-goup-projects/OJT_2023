@@ -15,6 +15,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorContactController>/Get/
+        /// <summary>
+        /// Get professor contacts
+        /// </summary>
+        /// <response code="200">Success: Get professor contacts</response>
         [HttpGet]
         public List<ProfessorContactDTO> Get()
         {
@@ -22,6 +26,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorContactController>/GetByUser/5
+        /// <summary>
+        /// Get professor contacts by professor id
+        /// </summary>
+        ///<response code="200">Success: Get professor contacts by professor id</response>
         [HttpGet]
         public ProfessorContactDTO? GetByUser(int id)
         {
@@ -29,6 +37,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorContactController>/GetById/5
+        /// <summary>
+        /// Get professor contacts by id
+        /// </summary>
+        /// <response code="200">Success: Get professor contacts by id </response>
         [HttpGet]
         public ProfessorContactDTO? GetById(int id)
         {
@@ -36,6 +48,10 @@ namespace API.Controllers
         }
 
         // GET api/<ProfessorContactController>/GetPage/?pageNum=5&pageLength=5
+        /// <summary>
+        /// Get and page professor contacts
+        /// </summary>
+        /// <response code="200">Success: Get and page professor contacts </response>
         [HttpGet]
         public List<ProfessorContactDTO> GetPage(int pageNum, int pageLength)
         {
@@ -43,6 +59,10 @@ namespace API.Controllers
         }
 
         // POST api/<ProfessorContactController>/Post
+        /// <summary>
+        /// Create professor contact
+        /// </summary>
+        /// <response code="200">Success: Create professor contact</response>
         [HttpPost]
         public void Post([FromBody]ProfessorContactDTO professorContact)
         {
@@ -50,6 +70,10 @@ namespace API.Controllers
         }
 
         // POST api/<ProfessorContactController>/Put
+        /// <summary>
+        /// Update professor contact
+        /// </summary>
+        /// <response code="200">Success: Update professor contact</response>
         [HttpPut]
         public void Put([FromBody]ProfessorContactDTO professorContact)
         {
@@ -57,6 +81,10 @@ namespace API.Controllers
         }
 
         // POST api/<ProfessorContactController>/Delete
+        /// <summary>
+        /// Delete professor contact
+        /// </summary>
+        /// <response code="200">Success: Delete professor contact</response>
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

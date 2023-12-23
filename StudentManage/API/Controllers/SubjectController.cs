@@ -15,6 +15,10 @@ namespace API.Controllers
         }
 
         // GET api/<SubjectController>/Get/
+        /// <summary>
+        /// Get subjects
+        /// </summary>
+        /// <response code="200">Success: Get subjects</response>
         [HttpGet]
         public List<SubjectDTO> Get()
         {
@@ -22,6 +26,10 @@ namespace API.Controllers
         }
 
         // GET api/<SubjectController>/GetByName/?name=name
+        /// <summary>
+        /// Get subjects by name
+        /// </summary>
+        /// <response code="200">Success: Get subjects by name</response>
         [HttpGet]
         public List<SubjectDTO> GetByName(string name)
         {
@@ -29,6 +37,10 @@ namespace API.Controllers
         }
 
         // GET api/<SubjectController>/GetById/5
+        /// <summary>
+        /// Get subjects by id
+        /// </summary>
+        /// <response code="200">Success: Get subjects by id</response>
         [HttpGet]
         public SubjectDTO? GetById(int id)
         {
@@ -36,6 +48,10 @@ namespace API.Controllers
         }
 
         // GET api/<SubjectController>/GetPage/?pageNum=5&pageLength=5
+        /// <summary>
+        /// Get and page subjects
+        /// </summary>
+        /// <response code="200">Success: Get and page subjects</response>
         [HttpGet]
         public List<SubjectDTO> GetPage(int pageNum, int pageLength)
         {
@@ -43,6 +59,10 @@ namespace API.Controllers
         }
 
         // GET api/<SubjectController>/GetPageByName/?pageNum=5&pageLength=5&name=name
+        /// <summary>
+        /// Get and page subjects by name 
+        /// </summary>
+        /// <response code="200">Success: Get and page subjects by name</response>
         [HttpGet]
         public List<SubjectDTO> GetPageByName(int pageNum, int pageLength, string name)
         {
@@ -50,6 +70,10 @@ namespace API.Controllers
         }
 
         // POST api/<SubjectController>/Post
+        /// <summary>
+        /// Create subject 
+        /// </summary>
+        /// <response code="200">Success: Create subject</response>
         [HttpPost]
         public ActionStatusDTO Post(SubjectDTO subject)
         {
@@ -57,6 +81,10 @@ namespace API.Controllers
         }
 
         // POST api/<SubjectController>/Put
+        /// <summary>
+        /// Update subject 
+        /// </summary>
+        /// <response code="200">Success: Update subject</response>
         [HttpPut]
         public ActionStatusDTO Put(SubjectDTO subject)
         {
@@ -64,6 +92,10 @@ namespace API.Controllers
         }
 
         // POST api/<SubjectController>/Delete
+        /// <summary>
+        /// Delete subject 
+        /// </summary>
+        /// <response code="200">Success: Delete subject</response>
         [HttpDelete("{id}")]
         public ActionStatusDTO Delete(int id)
         {
