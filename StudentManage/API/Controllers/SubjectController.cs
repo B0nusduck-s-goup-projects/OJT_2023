@@ -21,9 +21,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get subjects</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Get()
+        public ActionResult<List<SubjectDTO>> Get()
         {
             if (!_service.Get().Any())
             {
@@ -38,10 +36,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get subjects by name</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetByName(string name)
+        public ActionResult<List<SubjectDTO>> GetByName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -62,10 +57,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get subjects by id</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetById(int id)
+        public ActionResult<SubjectDTO> GetById(int id)
         {
             if (id <= 0)
             {
@@ -87,10 +79,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get and page subjects</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetPage(int pageNum, int pageLength)
+        public ActionResult<List<SubjectDTO>> GetPage(int pageNum, int pageLength)
         {
             if (pageNum < 0)
             {
@@ -114,10 +103,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get and page subjects by name</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetPageByName(int pageNum, int pageLength, string name)
+        public ActionResult<List<SubjectDTO>> GetPageByName(int pageNum, int pageLength, string name)
         {
             if (pageNum < 0)
             {
@@ -141,16 +127,19 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Create subject</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post(SubjectDTO subject)
+        public ActionResult<SubjectDTO> Post(SubjectDTO subject)
         {
             if (subject.Id > 0)
             {
                 return BadRequest("subject Id can not be changed.");
             }
-            return Ok(_service.Post(subject));
+            if (string.IsNullOrEmpty(subject.Name))
+            {
+                return BadRequest("subject requires Name");
+            }
+            ActionStatusDTO result = _service.Post(subject);
+            subject.Id = result.objectIds[0];
+            return Created("", subject);
         }
 
         // PUT api/<SubjectController>/Put
@@ -159,12 +148,14 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Update subject</response>
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Put(SubjectDTO subject)
+        public ActionResult Put(SubjectDTO subject)
         {
-            return Ok(_service.Put(subject));
+            if (string.IsNullOrEmpty(subject.Name))
+            {
+                return BadRequest("subject requires Name");
+            }
+            _service.Put(subject);
+            return NoContent();
         }
 
         // DELETE api/<SubjectController>/Delete
@@ -173,12 +164,14 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Delete subject</response>
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Delete(int id)
+        public ActionResult Delete(int id)
         {
-            return Ok(_service.Delete(id));
+            if (id == 0)
+            {
+                return BadRequest("Id can not be empty");
+            }
+            _service.Delete(id);
+            return NoContent();
         }
     }
 }

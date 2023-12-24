@@ -23,9 +23,7 @@ namespace API.Controllers
         /// Get subject student
         /// </summary>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Get()
+        public ActionResult<List<SubjectStudentDTO>> Get()
         {
             if (!_service.Get().Any())
             {
@@ -40,10 +38,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get subject student</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetById(int subjectId, int studentId)
+        public ActionResult<SubjectStudentDTO> GetById(int subjectId, int studentId)
         {
             if (subjectId <= 0)
             {
@@ -67,10 +62,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get subject student by student id</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetByStudent(int id)
+        public ActionResult<List<SubjectStudentDTO>> GetByStudent(int id)
         {
             if (id <= 0)
             {
@@ -96,10 +88,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get subject student by subject id</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetBySubject(int id)
+        public ActionResult<List<SubjectStudentDTO>> GetBySubject(int id)
         {
             if (id <= 0)
             {
@@ -125,10 +114,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get and page subject student</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetPage(int pageNum, int pageLength)
+        public ActionResult<List<SubjectStudentDTO>> GetPage(int pageNum, int pageLength)
         {
             if (pageNum < 0)
             {
@@ -153,10 +139,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Create subject student</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post(SubjectStudentDTO subject)
+        public ActionResult<SubjectStudentDTO> Post(SubjectStudentDTO subject)
         {
             var errors400 = new List<string>();
             var errors404 = new List<string>();
@@ -202,7 +185,10 @@ namespace API.Controllers
                 return NotFound(string.Join(", ", errors404));
             }
 
-            return Ok(_service.Post(subject));
+            ActionStatusDTO result = _service.Post(subject);
+            subject.SubjectId = result.objectIds[0];
+            subject.StudentId = result.objectIds[1];
+            return Created("", subject);
         }
 
         // PUT api/<SubjectStudentController>/Put
@@ -211,7 +197,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Update subject student</response>
         [HttpPut]
-        public IActionResult Put(SubjectStudentDTO subject)
+        public ActionResult Put(SubjectStudentDTO subject)
         {
             var errors400 = new List<string>();
             var errors404 = new List<string>();
@@ -256,7 +242,8 @@ namespace API.Controllers
             {
                 return NotFound(string.Join(", ", errors404));
             }
-            return Ok(_service.Put(subject));
+            _service.Put(subject);
+            return NoContent();
         }
 
         // DELETE api/<SubjectStudentController>/Delete
@@ -265,7 +252,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Delete subject student</response>
         [HttpDelete]
-        public IActionResult Delete(int subjectId, int studentId)
+        public ActionResult Delete(int subjectId, int studentId)
         {
             var delete404 = _service.Delete(subjectId, studentId);
             if (subjectId <= 0)
@@ -280,7 +267,8 @@ namespace API.Controllers
             {
                 return NotFound("Subject-Student data with SubjectId " + subjectId + " and StudentId " + studentId + " not found.");
             }
-            return Ok(_service.Delete(subjectId, studentId));
+            _service.Delete(subjectId, studentId);
+            return NoContent();
         }
     }
 }

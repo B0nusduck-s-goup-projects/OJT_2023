@@ -24,13 +24,11 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get professor contacts</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Get()
+        public ActionResult<List<ProfessorContactDTO>> Get()
         {
             if (!_service.Get().Any())
             {
-                return NotFound("The professor list is empty!");
+                return NotFound("The contact list is empty!");
             }
             return Ok(_service.Get());
         }
@@ -41,10 +39,7 @@ namespace API.Controllers
         /// </summary>
         ///<response code="200">Success: Get professor contacts by professor id</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetByUser(int id)
+        public ActionResult<ProfessorContactDTO> GetByUser(int id)
         {
             if (id <= 0)
             {
@@ -66,10 +61,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get professor contacts by id </response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetById(int id)
+        public ActionResult<ProfessorContactDTO> GetById(int id)
         {
             if (id <= 0)
             {
@@ -91,10 +83,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get and page professor contacts </response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetPage(int pageNum, int pageLength)
+        public ActionResult<List<ProfessorContactDTO>> GetPage(int pageNum, int pageLength)
         {
             if (pageNum < 0)
             {
@@ -110,7 +99,7 @@ namespace API.Controllers
 
             if (professors == null || professors.Count == 0)
             {
-                return NotFound("There is no professors from the page number: " + pageNum + ", length: " + pageLength);
+                return NotFound("There is no contact from the page number: " + pageNum + ", length: " + pageLength);
             }
             return Ok(professors);
         }
@@ -121,10 +110,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Create professor contact</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post([FromBody] ProfessorContactDTO professorContact)
+        public ActionResult<ProfessorContactDTO> Post([FromBody] ProfessorContactDTO professorContact)
         {
             if (professorContact.Id > 0)
             {
@@ -148,7 +134,9 @@ namespace API.Controllers
                 return BadRequest("Email address must end with @gmail.com.");
             }
 
-            return Ok(_service.Post(professorContact));
+            ActionStatusDTO result = _service.Post(professorContact);
+            professorContact.Id = result.objectIds[0];
+            return Created("", professorContact);
         }
 
         // PUT api/<ProfessorContactController>/Put
@@ -157,10 +145,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Update professor contact</response>
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Put([FromBody] ProfessorContactDTO professorContact)
+        public ActionResult Put([FromBody] ProfessorContactDTO professorContact)
         {
             if (professorContact.Id > 0)
             {
@@ -183,7 +168,8 @@ namespace API.Controllers
             {
                 return BadRequest("Email address must end with @gmail.com.");
             }
-            return Ok(_service.Put(professorContact));
+            _service.Put(professorContact);
+            return NoContent();
         }
 
         // DELETE api/<ProfessorContactController>/Delete
@@ -192,15 +178,14 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Delete professor contact</response>
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Delete(int id)
+        public ActionResult Delete(int id)
         {
             if (id == 0)
             {
                 return BadRequest("Id can not be empty");
             }
-            return Ok(_service.Delete(id));
+            _service.Delete(id);
+            return NoContent();
         }
     }
 }

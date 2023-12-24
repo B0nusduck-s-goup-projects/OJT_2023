@@ -40,9 +40,9 @@ namespace DataAccessLayer.Repository
         }
 
         //get by subject
-        public ProfessorEntity? GetBySubject(int id)
+        public List<ProfessorEntity> GetBySubject(int id)
         {
-            ProfessorEntity? result = _context.Professors.FirstOrDefault(x => x.SubjectId == id);
+            List<ProfessorEntity> result = _context.Professors.Where(x => x.SubjectId == id).ToList();
             return result;
         }
         //get by id

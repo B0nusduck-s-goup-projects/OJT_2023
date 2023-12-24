@@ -34,10 +34,10 @@ namespace BusinessLayer.Service
         }
 
         //get by subject
-        public ProfessorDTO? GetBySubject(int id)
+        public List<ProfessorDTO> GetBySubject(int id)
         {
-            ProfessorEntity? list = _repository.GetBySubject(id);
-            ProfessorDTO? result = _mapper.Map<ProfessorDTO?>(list);
+            List<ProfessorEntity>? list = _repository.GetBySubject(id);
+            List<ProfessorDTO> result = _mapper.Map<List<ProfessorDTO>>(list);
             return result;
         }
 

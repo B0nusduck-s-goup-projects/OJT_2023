@@ -21,9 +21,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get all students</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Get()
+        public ActionResult<List<StudentDTO>> Get()
         {
             if (!_service.Get().Any())
             {
@@ -39,10 +37,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get students by name</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetByName(string name)
+        public ActionResult<List<StudentDTO>> GetByName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -64,10 +59,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get student by id</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetById(int id)
+        public ActionResult<List<StudentDTO>> GetById(int id)
         {
             if (id <= 0)
             {
@@ -90,10 +82,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get and page students</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetPage(int pageNum, int pageLength)
+        public ActionResult<List<StudentDTO>> GetPage(int pageNum, int pageLength)
         {
             if (pageNum < 0)
             {
@@ -121,10 +110,7 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Get and page student by name</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetPageByName(int pageNum, int pageLength, string name)
+        public ActionResult<List<StudentDTO>> GetPageByName(int pageNum, int pageLength, string name)
         {
             if (pageNum < 0)
             {
@@ -150,16 +136,19 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Create a student</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post([FromBody] StudentDTO student)
+        public ActionResult<StudentDTO> Post([FromBody] StudentDTO student)
         {
             if (student.Id > 0)
             {
                 return BadRequest("Student Id can not be changed.");
             }
-            return Ok(_service.Post(student));
+            if (string.IsNullOrEmpty(student.FullName))
+            {
+                return BadRequest("Student requires Name");
+            }
+            ActionStatusDTO result = _service.Post(student);
+            student.Id = result.objectIds[0];
+            return Created("", student);
         }
 
         // PUT api/<StudentController>/Put
@@ -168,16 +157,14 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Update a student</response>
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Put([FromBody] StudentDTO student)
+        public ActionResult Put([FromBody] StudentDTO student)
         {
             if (string.IsNullOrEmpty(student.FullName))
             {
                 return BadRequest("Student requires Name");
             }
-            return Ok(_service.Put(student));
+            _service.Put(student);
+            return NoContent();
         }
 
         // DELETE api/<StudentController>/Delete
@@ -186,15 +173,14 @@ namespace API.Controllers
         /// </summary>
         /// <response code="200">Success: Delete a student</response>
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Delete(int id)
+        public ActionResult Delete(int id)
         {
             if (id == 0)
             {
                 return BadRequest("Id can not be empty");
             }
-            return Ok(_service.Delete(id));
+            _service.Delete(id);
+            return NoContent();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace DataAccessLayer.Repository.Interface
     {
         public List<ProfessorEntity> Get();
         public List<ProfessorEntity> Get(string name);
-        public ProfessorEntity? GetBySubject(int id);
+        public List<ProfessorEntity>? GetBySubject(int id);
         public ProfessorEntity? Get(int id);
         public List<ProfessorEntity> Get(int pageNum, int pageLength);
         public List<ProfessorEntity> Get(int pageNum, int pageLength, string name);
