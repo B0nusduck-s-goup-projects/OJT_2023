@@ -23,6 +23,7 @@ namespace API.Controllers
         /// Get professor contacts
         /// </summary>
         /// <response code="200">Success: Get professor contacts</response>
+        /// <response code="404">Not found: The contact list is empty!</response>
         [HttpGet]
         public ActionResult<List<ProfessorContactDTO>> Get()
         {
@@ -37,7 +38,9 @@ namespace API.Controllers
         /// <summary>
         /// Get professor contacts by professor id
         /// </summary>
-        ///<response code="200">Success: Get professor contacts by professor id</response>
+        /// <response code="200">Success: Get professor contacts by professor id</response>
+        /// <response code="400">Bad Request: User ID must be greater than 0.</response>
+        /// <response code="404">Not Found: There is no professor with user ID.</response>
         [HttpGet]
         public ActionResult<ProfessorContactDTO> GetByUser(int id)
         {
@@ -59,7 +62,9 @@ namespace API.Controllers
         /// <summary>
         /// Get professor contacts by id
         /// </summary>
-        /// <response code="200">Success: Get professor contacts by id </response>
+        /// <response code="200">Success: Get professor contacts by id</response>
+        /// <response code="400">Bad Request: User ID must be greater than 0.</response>
+        /// <response code="404">Not Found: There is no professor with ID.</response>
         [HttpGet]
         public ActionResult<ProfessorContactDTO> GetById(int id)
         {
@@ -81,7 +86,11 @@ namespace API.Controllers
         /// <summary>
         /// Get and page professor contacts
         /// </summary>
-        /// <response code="200">Success: Get and page professor contacts </response>
+        /// <param name="pageNum">The page number (starting from 1).</param>
+        /// <param name="pageLength">The number of items per page (positive value).</param>
+        /// <response code="200">Success: Get and page professor contacts</response>
+        /// <response code="400">Bad Request: Page number must be greater than or equal to 1, or page length must be a positive value.</response>
+        /// <response code="404">Not Found: There is no contact from the page number: {pageNum}, length: {pageLength}</response>
         [HttpGet]
         public ActionResult<List<ProfessorContactDTO>> GetPage(int pageNum, int pageLength)
         {
@@ -108,7 +117,9 @@ namespace API.Controllers
         /// <summary>
         /// Create professor contact
         /// </summary>
-        /// <response code="200">Success: Create professor contact</response>
+        /// <response code="201">Created: Professor contact created successfully</response>
+        /// <response code="400">Bad Request: Professor Id can not be changed, Professor requires a positive UserId number, Phone number must contain only digits, or Email address must end with @gmail.com.</response>
+        /// <response code="404">Not Found: Professor with specified UserId does not exist.</response>
         [HttpPost]
         public ActionResult<ProfessorContactDTO> Post([FromBody] ProfessorContactDTO professorContact)
         {
@@ -144,6 +155,8 @@ namespace API.Controllers
         /// Update professor contact
         /// </summary>
         /// <response code="200">Success: Update professor contact</response>
+        /// <response code="400">Bad Request: Professor Id can not be changed, Professor requires a UserId, Phone number must contain only digits, or Email address must end with @gmail.com.</response>
+        /// <response code="404">Not Found: Professor with specified UserId does not exist.</response>
         [HttpPut]
         public ActionResult Put([FromBody] ProfessorContactDTO professorContact)
         {
@@ -176,7 +189,9 @@ namespace API.Controllers
         /// <summary>
         /// Delete professor contact
         /// </summary>
+        /// <param name="id">The ID of the professor contact to delete.</param>
         /// <response code="200">Success: Delete professor contact</response>
+        /// <response code="400">Bad Request: ID must be greater than 0.</response>
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

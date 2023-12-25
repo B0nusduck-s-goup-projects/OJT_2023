@@ -20,8 +20,13 @@ namespace API.Controllers
 
         // GET api/<SubjectStudentController>/Get/
         /// <summary>
-        /// Get subject student
+        /// Get subject student by subjectId and studentId
         /// </summary>
+        /// <param name="subjectId">The ID of the subject</param>
+        /// <param name="studentId">The ID of the student</param>
+        /// <response code="200">Success: Get subject student</response>
+        /// <response code="400">Bad Request: Invalid subjectId or studentId</response>
+        /// <response code="404">Not Found: Subject student not found</response>
         [HttpGet]
         public ActionResult<List<SubjectStudentDTO>> Get()
         {
@@ -36,7 +41,11 @@ namespace API.Controllers
         /// <summary>
         /// Get subject student
         /// </summary>
-        /// <response code="200">Success: Get subject student</response>
+        /// <param name="subjectId">The unique identifier for the subject (greater than 0).</param>
+        /// <param name="studentId">The unique identifier for the student (greater than 0).</param>
+        /// <response code="200">Success: Returns the subject student information.</response>
+        /// <response code="400">Bad Request: If SubjectId or StudentId is not greater than 0.</response>
+        /// <response code="404">Not Found: If no data is found for the specified SubjectId and StudentId.</response>
         [HttpGet]
         public ActionResult<SubjectStudentDTO> GetById(int subjectId, int studentId)
         {
@@ -60,7 +69,10 @@ namespace API.Controllers
         /// <summary>
         /// Get subject student by student id
         /// </summary>
-        /// <response code="200">Success: Get subject student by student id</response>
+        /// <param name="id">The unique identifier for the student (greater than 0).</param>
+        /// <response code="200">Success: Returns the subject student information for the specified student ID.</response>
+        /// <response code="400">Bad Request: If the Student ID is not greater than 0.</response>
+        /// <response code="404">Not Found: If the student or student scores are not found for the specified Student ID.</response>
         [HttpGet]
         public ActionResult<List<SubjectStudentDTO>> GetByStudent(int id)
         {
@@ -86,7 +98,10 @@ namespace API.Controllers
         /// <summary>
         /// Get subject student by subject id
         /// </summary>
-        /// <response code="200">Success: Get subject student by subject id</response>
+        /// <param name="id">The unique identifier for the subject (greater than 0).</param>
+        /// <response code="200">Success: Returns the subject student information for the specified subject.</response>
+        /// <response code="400">Bad Request: If SubjectId is not greater than 0.</response>
+        /// <response code="404">Not Found: If the subject or student scores are not found for the specified SubjectId.</response>
         [HttpGet]
         public ActionResult<List<SubjectStudentDTO>> GetBySubject(int id)
         {
@@ -110,9 +125,13 @@ namespace API.Controllers
 
         // GET api/<SubjectStudentController>/GetPage/?pageNum=5&pageLength=5
         /// <summary>
-        /// Get and page subject student
+        /// Retrieve and paginate subject student information.
         /// </summary>
-        /// <response code="200">Success: Get and page subject student</response>
+        /// <param name="pageNum">The page number (greater than or equal to 1).</param>
+        /// <param name="pageLength">The length of the page (a positive value).</param>
+        /// <response code="200">Success: Returns a paginated list of subject student information.</response>
+        /// <response code="400">Bad Request: If pageNum is less than 1 or pageLength is not a positive value.</response>
+        /// <response code="404">Not Found: If no student scores are found for the specified page number and length.</response>
         [HttpGet]
         public ActionResult<List<SubjectStudentDTO>> GetPage(int pageNum, int pageLength)
         {
@@ -135,9 +154,12 @@ namespace API.Controllers
 
         // POST api/<SubjectStudentController>/Post
         /// <summary>
-        /// Create subject student
+        /// Create subject student.
         /// </summary>
-        /// <response code="200">Success: Create subject student</response>
+        /// <param name="subject">The subject student information to be created.</param>
+        /// <response code="200">Success: Returns the created subject student information.</response>
+        /// <response code="400">Bad Request: If validation fails, it returns detailed error messages.</response>
+        /// <response code="404">Not Found: If the specified SubjectId or StudentId does not exist.</response>
         [HttpPost]
         public ActionResult<SubjectStudentDTO> Post(SubjectStudentDTO subject)
         {
@@ -195,7 +217,10 @@ namespace API.Controllers
         /// <summary>
         /// Update subject student 
         /// </summary>
-        /// <response code="200">Success: Update subject student</response>
+        /// <param name="subject">The subject student information to be updated.</param>
+        /// <response code="200">Success: No content.</response>
+        /// <response code="400">Bad Request: If validation fails, it returns detailed error messages.</response>
+        /// <response code="404">Not Found: If the specified SubjectId or StudentId does not exist.</response>
         [HttpPut]
         public ActionResult Put(SubjectStudentDTO subject)
         {
@@ -250,7 +275,11 @@ namespace API.Controllers
         /// <summary>
         /// Delete subject student
         /// </summary>
-        /// <response code="200">Success: Delete subject student</response>
+        /// <param name="subjectId">The ID of the subject associated with the student.</param>
+        /// <param name="studentId">The ID of the student associated with the subject.</param>
+        /// <response code="200">Success: No content.</response>
+        /// <response code="400">Bad Request: If SubjectId or StudentId is less than or equal to 0.</response>
+        /// <response code="404">Not Found: If the specified SubjectId and StudentId combination does not exist.</response>
         [HttpDelete]
         public ActionResult Delete(int subjectId, int studentId)
         {

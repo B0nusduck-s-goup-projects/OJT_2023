@@ -20,6 +20,7 @@ namespace API.Controllers
         /// Get all students 
         /// </summary>
         /// <response code="200">Success: Get all students</response>
+        /// <response code="404">Not Found: The student list is empty!</response>
         [HttpGet]
         public ActionResult<List<StudentDTO>> Get()
         {
@@ -35,7 +36,10 @@ namespace API.Controllers
         /// <summary>
         /// Get students by name
         /// </summary>
+        /// <param name="name">The name of the students to retrieve.</param>
         /// <response code="200">Success: Get students by name</response>
+        /// <response code="400">Bad Request: Student name cannot be empty.</response>
+        /// <response code="404">Not Found: There is no student with the name: {name}</response>
         [HttpGet]
         public ActionResult<List<StudentDTO>> GetByName(string name)
         {
@@ -57,7 +61,10 @@ namespace API.Controllers
         /// <summary>
         /// Get student by id
         /// </summary>
-        /// <response code="200">Success: Get student by id</response>
+        /// <param name="id">The ID of the student to retrieve.</param>
+        /// <response code="200">Success: Get student by ID</response>
+        /// <response code="400">Bad Request: Student ID must be greater than 0.</response>
+        /// <response code="404">Not Found: There is no student with the ID: {id}</response>
         [HttpGet]
         public ActionResult<List<StudentDTO>> GetById(int id)
         {
@@ -80,7 +87,11 @@ namespace API.Controllers
         /// <summary>
         /// Get and page students
         /// </summary>
+        /// <param name="pageNum">The page number to retrieve.</param>
+        /// <param name="pageLength">The length of the page.</param>
         /// <response code="200">Success: Get and page students</response>
+        /// <response code="400">Bad Request: Page number must be greater than or equal to 1. Page length must be a positive value.</response>
+        /// <response code="404">Not Found: There is no students from the page number: {pageNum}, length: {pageLength}</response>
         [HttpGet]
         public ActionResult<List<StudentDTO>> GetPage(int pageNum, int pageLength)
         {
@@ -108,7 +119,12 @@ namespace API.Controllers
         /// <summary>
         /// Get and page student by name
         /// </summary>
-        /// <response code="200">Success: Get and page student by name</response>
+        /// <param name="pageNum">The page number to retrieve.</param>
+        /// <param name="pageLength">The length of the page.</param>
+        /// <param name="name">The name of the students to retrieve.</param>
+        /// <response code="200">Success: Get and page students by name</response>
+        /// <response code="400">Bad Request: Page number must be greater than or equal to 1. Page length must be a positive value.</response>
+        /// <response code="404">Not Found: There is no students from the page number: {pageNum}, length: {pageLength}, or with the name: {name}</response>
         [HttpGet]
         public ActionResult<List<StudentDTO>> GetPageByName(int pageNum, int pageLength, string name)
         {
@@ -134,7 +150,9 @@ namespace API.Controllers
         /// <summary>
         /// Create a student
         /// </summary>
+        /// <param name="student">The student information to create.</param>
         /// <response code="200">Success: Create a student</response>
+        /// <response code="400">Bad Request: Student Id can not be changed. Student requires Name.</response>
         [HttpPost]
         public ActionResult<StudentDTO> Post([FromBody] StudentDTO student)
         {
@@ -155,7 +173,9 @@ namespace API.Controllers
         /// <summary>
         /// Update a student
         /// </summary>
+        /// <param name="student">The student information to update.</param>
         /// <response code="200">Success: Update a student</response>
+        /// <response code="400">Bad Request: Student requires Name.</response>
         [HttpPut]
         public ActionResult Put([FromBody] StudentDTO student)
         {
@@ -171,7 +191,9 @@ namespace API.Controllers
         /// <summary>
         /// Delete a student
         /// </summary>
+        /// <param name="id">The ID of the student to delete.</param>
         /// <response code="200">Success: Delete a student</response>
+        /// <response code="400">Bad Request: Id can not be empty.</response>
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

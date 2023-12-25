@@ -20,6 +20,7 @@ namespace API.Controllers
         /// Get subjects
         /// </summary>
         /// <response code="200">Success: Get subjects</response>
+        /// <response code="404">Not Found: The subject list is empty!</response>
         [HttpGet]
         public ActionResult<List<SubjectDTO>> Get()
         {
@@ -34,7 +35,10 @@ namespace API.Controllers
         /// <summary>
         /// Get subjects by name
         /// </summary>
+        /// <param name="name">The name of the subject to retrieve.</param>
         /// <response code="200">Success: Get subjects by name</response>
+        /// <response code="400">Bad Request: Subject name cannot be empty.</response>
+        /// <response code="404">Not Found: There is no subject with the name: {name}</response>
         [HttpGet]
         public ActionResult<List<SubjectDTO>> GetByName(string name)
         {
@@ -54,8 +58,10 @@ namespace API.Controllers
         // GET api/<SubjectController>/GetById/5
         /// <summary>
         /// Get subjects by id
-        /// </summary>
+        /// <param name="id">The ID of the subject to retrieve.</param>
         /// <response code="200">Success: Get subjects by id</response>
+        /// <response code="400">Bad Request: Subject ID must be greater than 0.</response>
+        /// <response code="404">Not Found: There is no subject with ID: {id}</response>
         [HttpGet]
         public ActionResult<SubjectDTO> GetById(int id)
         {
@@ -77,7 +83,11 @@ namespace API.Controllers
         /// <summary>
         /// Get and page subjects
         /// </summary>
+        /// <param name="pageNum">The page number to retrieve.</param>
+        /// <param name="pageLength">The length of the page.</param>
         /// <response code="200">Success: Get and page subjects</response>
+        /// <response code="400">Bad Request: Page number must be greater than or equal to 1. Page length must be a positive value.</response>
+        /// <response code="404">Not Found: There is no subjects from the page number: {pageNum}, length: {pageLength}</response>
         [HttpGet]
         public ActionResult<List<SubjectDTO>> GetPage(int pageNum, int pageLength)
         {
@@ -101,7 +111,12 @@ namespace API.Controllers
         /// <summary>
         /// Get and page subjects by name 
         /// </summary>
+        /// <param name="pageNum">The page number to retrieve.</param>
+        /// <param name="pageLength">The length of the page.</param>
+        /// <param name="name">The name of the subject to filter by.</param>
         /// <response code="200">Success: Get and page subjects by name</response>
+        /// <response code="400">Bad Request: Page number must be greater than or equal to 1. Page length must be a positive value.</response>
+        /// <response code="404">Not Found: There is no subjects from the page number: {pageNum}, length: {pageLength} or with the name: {name}</response>
         [HttpGet]
         public ActionResult<List<SubjectDTO>> GetPageByName(int pageNum, int pageLength, string name)
         {
@@ -125,7 +140,9 @@ namespace API.Controllers
         /// <summary>
         /// Create subject 
         /// </summary>
+        /// <param name="subject">The subject information to create.</param>
         /// <response code="200">Success: Create subject</response>
+        /// <response code="400">Bad Request: Subject Id can not be changed. Subject requires Name.</response>
         [HttpPost]
         public ActionResult<SubjectDTO> Post(SubjectDTO subject)
         {
@@ -146,7 +163,10 @@ namespace API.Controllers
         /// <summary>
         /// Update subject 
         /// </summary>
+        /// <param name="subject">The subject information to update.</param>
         /// <response code="200">Success: Update subject</response>
+        /// <response code="400">Bad Request: Subject requires Name.</response>
+        /// <response code="404">Not Found: Subject not found.</response>
         [HttpPut]
         public ActionResult Put(SubjectDTO subject)
         {
@@ -162,7 +182,10 @@ namespace API.Controllers
         /// <summary>
         /// Delete subject 
         /// </summary>
+        /// <param name="id">The ID of the subject to delete.</param>
         /// <response code="200">Success: Delete subject</response>
+        /// <response code="400">Bad Request: ID cannot be empty.</response>
+        /// <response code="404">Not Found: Subject not found.</response>
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
