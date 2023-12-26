@@ -42,20 +42,28 @@ namespace API.Controllers
         /// <response code="400">Bad Request: User ID must be greater than 0.</response>
         /// <response code="404">Not Found: There is no professor with user ID.</response>
         [HttpGet]
-        public ActionResult<ProfessorContactDTO> GetByUser(int id)
+        public ActionResult<ProfessorContactDTO> GetByUser(string id)
         {
-            if (id <= 0)
+            int userId;
+            if (!int.TryParse(id, out userId))  
+            {
+                return BadRequest("Invalid user ID: Please provide a valid integer value.");
+            }
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return BadRequest("User ID is required.");
+            }
+            if (userId <= 0)
             {
                 return BadRequest("User ID must be greater than 0.");
             }
-
-            ProfessorContactDTO? professor = _professorContactservice.GetByUser(id);
-            if (professor == null)
+            ProfessorContactDTO? professor = _professorContactservice.GetByUser(userId);
+            if (professor == null )
             {
-                return NotFound("There is no professor with user ID: " + id);
+                return NotFound("There is no professor with user ID: " + userId);
             }
 
-            return Ok(_professorContactservice.GetByUser(id));
+            return Ok(_professorContactservice.GetByUser(userId));
         }
 
         // GET api/<ProfessorContactController>/GetById/5
@@ -66,20 +74,28 @@ namespace API.Controllers
         /// <response code="400">Bad Request: User ID must be greater than 0.</response>
         /// <response code="404">Not Found: There is no professor with ID.</response>
         [HttpGet]
-        public ActionResult<ProfessorContactDTO> GetById(int id)
+        public ActionResult<ProfessorContactDTO> GetById(string id)
         {
-            if (id <= 0)
+            int userId;
+            if (!int.TryParse(id, out userId))
+            {
+                return BadRequest("Invalid user ID: Please provide a valid integer value.");
+            }
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return BadRequest("User ID is required.");
+            }
+            if (userId <= 0)
             {
                 return BadRequest("User ID must be greater than 0.");
             }
-
-            ProfessorContactDTO? professor = _professorContactservice.Get(id);
+            ProfessorContactDTO? professor = _professorContactservice.Get(userId);
             if (professor == null)
             {
-                return NotFound("There is no professor with id: " + id);
+                return NotFound("There is no professor with id: " + userId);
             }
 
-            return Ok(_professorContactservice.Get(id));
+            return Ok(_professorContactservice.Get(userId));
         }
 
         // GET api/<ProfessorContactController>/GetPage/?pageNum=5&pageLength=5
@@ -92,16 +108,16 @@ namespace API.Controllers
         /// <response code="400">Bad Request: Page number must be greater than or equal to 1, or page length must be a positive value.</response>
         /// <response code="404">Not Found: There is no contact from the page number: {pageNum}, length: {pageLength}</response>
         [HttpGet]
-        public ActionResult<List<ProfessorContactDTO>> GetPage(int pageNum, int pageLength)
+        public ActionResult<List<ProfessorContactDTO>> GetPage(string pageNumString, string pageLengthString)
         {
-            if (pageNum < 0)
+            int pageNum, pageLength;
+            if (!int.TryParse(pageNumString, out pageNum) || pageNum < 0)
             {
-                return BadRequest("Page number must be greater than or equal to 1.");
+                return BadRequest("Invalid page number: Please provide a positive integer value.");
             }
-
-            if (pageLength <= 0)
+            if (!int.TryParse(pageLengthString, out pageLength) || pageLength <= 0)
             {
-                return BadRequest("Page length must be a positive value.");
+                return BadRequest("Invalid page length: Please provide a positive integer value.");
             }
 
             List<ProfessorContactDTO> professors = _professorContactservice.Get(pageNum, pageLength);
@@ -123,6 +139,11 @@ namespace API.Controllers
         [HttpPost]
         public ActionResult<ProfessorContactDTO> Post([FromBody] ProfessorContactDTO professorContact)
         {
+            int uid;
+            if (!int.TryParse(professorContact.UserId.ToString(), out uid))
+            {
+                return BadRequest("Invalid UserId: Please provide a valid integer value.");
+            }
             if (professorContact.Id > 0)
             {
                 return BadRequest("Professor Id can not be changed.");
@@ -160,6 +181,11 @@ namespace API.Controllers
         [HttpPut]
         public ActionResult Put([FromBody] ProfessorContactDTO professorContact)
         {
+            int uid;
+            if (!int.TryParse(professorContact.UserId.ToString(), out uid))
+            {
+                return BadRequest("Invalid UserId: Please provide a valid integer value.");
+            }
             if (professorContact.Id > 0)
             {
                 return BadRequest("Professor Id can not be changed.");
@@ -192,15 +218,26 @@ namespace API.Controllers
         /// <param name="id">The ID of the professor contact to delete.</param>
         /// <response code="200">Success: Delete professor contact</response>
         /// <response code="400">Bad Request: ID must be greater than 0.</response>
+        /// <response code="404">Not Found: Professor with specified UserId does not exist.</response>
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
-            if (id == 0)
+            if (string.IsNullOrEmpty(id))
             {
-                return BadRequest("Id can not be empty");
+                return BadRequest("Id is required.");
             }
-            _professorContactservice.Delete(id);
-            return NoContent();
+            int userId;
+            if (!int.TryParse(id, out userId))
+            {
+                return BadRequest("Invalid Id: Please provide a valid integer value.");
+            }
+            ProfessorContactDTO? professor = _professorContactservice.Get(userId);
+            if (professor == null)
+            {
+                return NotFound("There is no professor with id: " + userId);
+            }
+            _professorContactservice.Delete(userId);
+            return Ok("Contact deleted successfully.");
         }
     }
 }

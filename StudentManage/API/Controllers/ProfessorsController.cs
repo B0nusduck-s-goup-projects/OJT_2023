@@ -68,17 +68,21 @@ namespace API.Controllers
         /// <response code="400">Bad Request: Subject ID must be greater than 0.</response>
         /// <response code="404">Not Found: There is no professor teaching subject with ID: {id}</response>
         [HttpGet("bysubject/{id}")]
-        public ActionResult<List<ProfessorDTO>> GetBySubject(int id)
+        public ActionResult<List<ProfessorDTO>> GetBySubject(string id)
         {
-            if (id <= 0)
+            int userId;
+            if (!int.TryParse(id, out userId))
             {
-                return BadRequest("Subject ID must be greater than 0.");
+                return BadRequest("Invalid user ID: Please provide a valid integer value.");
             }
-
-            List<ProfessorDTO> professor = _professorService.GetBySubject(id);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return BadRequest("User ID is required.");
+            }
+            List<ProfessorDTO> professor = _professorService.GetBySubject(userId);
             if (professor == null)
             {
-                return NotFound("There is no professor teaching subject: " + id);
+                return NotFound("There is no professor teaching subject: " + userId);
             }
 
             return Ok(professor);

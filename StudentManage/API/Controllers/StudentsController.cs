@@ -66,17 +66,26 @@ namespace API.Controllers
         /// <response code="400">Bad Request: Student ID must be greater than 0.</response>
         /// <response code="404">Not Found: There is no student with the ID: {id}</response>
         [HttpGet]
-        public ActionResult<List<StudentDTO>> GetById(int id)
+        public ActionResult<List<StudentDTO>> GetById(string id)
         {
-            if (id <= 0)
+            int userId;
+            if (!int.TryParse(id, out userId))
+            {
+                return BadRequest("Invalid user ID: Please provide a valid integer value.");
+            }
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return BadRequest("User ID is required.");
+            }
+            if (userId <= 0)
             {
                 return BadRequest("Student ID must be greater than 0.");
             }
 
-            StudentDTO? students = _service.GetByStudent(id);
+            StudentDTO? students = _service.GetByStudent(userId);
             if (students == null)
             {
-                return NotFound("There is no student with the ID: " + id);
+                return NotFound("There is no student with the ID: " + userId);
             }
 
             return Ok(students);
