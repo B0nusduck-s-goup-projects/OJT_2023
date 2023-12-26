@@ -15,7 +15,7 @@ namespace DataAccessLayer.Repository
         //get list
         public List<SubjectEntity> Get()
         {
-            List<SubjectEntity> list = _context.Subjects.Take(100).ToList();
+            List<SubjectEntity> list = _context.Subjects.ToList();
             return list;
         }
 
@@ -23,7 +23,7 @@ namespace DataAccessLayer.Repository
         public List<SubjectEntity> Get(string name)
         {
             List<SubjectEntity> list = _context.Subjects.Where(p => p.Name.Contains(name))
-                                                        .Take(100).ToList();
+                                                        .ToList();
             return list;
         }
 

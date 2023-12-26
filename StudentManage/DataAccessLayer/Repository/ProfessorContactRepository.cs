@@ -16,7 +16,7 @@ namespace DataAccessLayer.Repository
         public List<ProfessorContactEntity> Get()
         {
             List<ProfessorContactEntity> list;
-            list = _context.PContacts.Take(100).ToList();
+            list = _context.PContacts.ToList();
             return list;
         }
 

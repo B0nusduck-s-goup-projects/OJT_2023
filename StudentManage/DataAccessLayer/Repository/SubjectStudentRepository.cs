@@ -15,7 +15,7 @@ namespace DataAccessLayer.Repository
         //get list
         public List<SubjectStudentEntity> Get()
         {
-            List<SubjectStudentEntity> list = _context.SubjectStudent.Take(100).ToList();
+            List<SubjectStudentEntity> list = _context.SubjectStudent.ToList();
             return list;
         }
 

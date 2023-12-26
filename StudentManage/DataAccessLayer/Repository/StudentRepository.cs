@@ -16,7 +16,7 @@ namespace DataAccessLayer.Repository
         public List<StudentEntity> Get()
         {
             List<StudentEntity> list;
-            list = _context.Students.Take(100).ToList();
+            list = _context.Students.ToList();
             return list;
         }
 
@@ -30,7 +30,7 @@ namespace DataAccessLayer.Repository
             List<StudentEntity> list = _context.Students.Where(p => p.FirstName.Contains(name) ||
                                                                     p.MiddleName.Contains(name) ||
                                                                     p.LastName.Contains(name))
-                                                                    .Take(100).ToList();
+                                                                    .ToList();
             if (list == null || list.Count == 0)
             {
                 return new List<StudentEntity>();
